@@ -1,58 +1,52 @@
 <?php
-
 namespace App\Http\Controllers;
 
-//use App\Models\User;
-use Illuminate\Http\Response;
-use App\Traits\ApiResponser;
-use Illuminate\Http\Request;
-use DB;
-use App\Services\User1Service;
+use Illuminate\Http\Response;        // Response Components
+use App\Traits\ApiResponser;        // <-- use to standardize our code for api response
+use Illuminate\Http\Request;        // <-- handling http request in lumen
+use App\Services\User2Service;      // user2 Services
 
-class UserController extends Controller
+class User2Controller extends Controller 
 {
-    private $request;
+    // use to add your Traits ApiResponser
+    use ApiResponser;
 
-    public function __construct(Request $request){
-        $this->request = $request;
+    /**
+     * The service to consume the User2 Microservice
+     * @var User2Service
+     */
+    public $user2Service;
+
+    /**
+     * Create a new controller instance
+     * @return void
+     */
+    public function __construct(User2Service $user2Service)
+    {
+        $this->user2Service = $user2Service;
     }
 
-    /* Helper method to return a successful JSON response */
-    protected function successResponse($data, $code = Response::HTTP_OK){
-
+    /**
+     * Return the list of users
+     * @return Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return $this->successResponse($this->user2Service->obtainUsers2());
     }
 
-    /* Helper method to return an error JSON response */
-    protected function errorResponse($message, $code){
-
+    /**
+     * Create a new user record
+     * @param Request $request
+     * @return Illuminate\Http\Response
+     */
+    public function add(Request $request)
+    {
+        return $this->successResponse(
+            $this->user2Service->createUser2($request->all()),
+            Response::HTTP_CREATED
+        );
     }
 
-    /* Return the list of users */
-    public function index(){
-
-    }
-
-    /* Get all users */
-    public function getUsers(){
-
-    }
-
-    /*Add a new user*/
-    public function add(Request $request){
-
-    }
-
-    /*Show details of a single user*/
-    public function show($id){
-
-    }
-
-    /*Update an existing user*/
-    public function update(Request $request, $id){
-    }
-
-    /* Delete a user */
-    public function delete($id){
-
-    }
+    
 }
