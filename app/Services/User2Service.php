@@ -24,6 +24,6 @@ class User2Service
      */
     public function obtainUsers2()
     {
-        return $this->performRequest('GET', 'api/users'); // This code will call GET localhost:8002/users (our site2)
+        return $this->performRequest('GET', 'api/users'); // This code will call GET localhost:8001/users (our site2)
     }
 }
