@@ -1,58 +1,52 @@
 <?php
-
 namespace App\Http\Controllers;
 
-//use App\Models\User;
-use Illuminate\Http\Response;
-use App\Traits\ApiResponser;
-use Illuminate\Http\Request;
-use DB;
-use App\Services\User1Service;
+use Illuminate\Http\Response;        // Response Components
+use App\Traits\ApiResponser;        // <-- use to standardize our code for api response
+use Illuminate\Http\Request;        // <-- handling http request in lumen
+use App\Services\User1Service;      // user1 Services
 
-class UserController extends Controller
+class User1Controller extends Controller 
 {
-    private $request;
+    // use to add your Traits ApiResponser
+    use ApiResponser;
 
-    public function __construct(Request $request){
-        $this->request = $request;
+    /**
+     * The service to consume the User1 Microservice
+     * @var User1Service
+     */
+    public $user1Service;
+
+    /**
+     * Create a new controller instance
+     * @return void
+     */
+    public function __construct(User1Service $user1Service)
+    {
+        $this->user1Service = $user1Service;
     }
 
-    /* Helper method to return a successful JSON response */
-    protected function successResponse($data, $code = Response::HTTP_OK){
-        return response()->json(['data' => $data], $code);
+    /**
+     * Return the list of users
+     * @return Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return $this->successResponse($this->user1Service->obtainUsers1());
     }
 
-    /* Helper method to return an error JSON response */
-    protected function errorResponse($message, $code){
-        return response()->json(['error' => $message, 'code' => $code], $code);
+    /**
+     * Create a new user record
+     * @param Request $request
+     * @return Illuminate\Http\Response
+     */
+    public function add(Request $request)
+    {
+        return $this->successResponse(
+            $this->user1Service->createUser1($request->all()),
+            Response::HTTP_CREATED
+        );
     }
 
-    /* Return the list of users */
-    public function index(){
-
-    }
-
-    /* Get all users */
-    public function getUsers(){
-
-    }
-
-    /*Add a new user*/
-    public function add(Request $request){
-
-    }
-
-    /*Show details of a single user*/
-    public function show($id){
-
-    }
-
-    /*Update an existing user*/
-    public function update(Request $request, $id){
-    }
-
-    /* Delete a user */
-    public function delete($id){
-
-    }
+    
 }
