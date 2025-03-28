@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use App\Traits\ApiResponser; 
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -83,6 +84,13 @@ class Handler extends ExceptionHandler
         // unauthorized access
         if ($exception instanceof AuthenticationException) {
             return $this->errorResponse($exception->getMessage(), Response::HTTP_UNAUTHORIZED);
+        }
+
+        if ($exception instanceof ClientException) {
+           $message = $exception->getResponse()->getBody();
+           $code = $exception->getCode();
+
+           return $this->errorResponse($message,200);
         }
 
         // if running in development mode, show original error
